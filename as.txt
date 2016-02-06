@@ -1,0 +1,322 @@
+	bla.as
+handle_read:
+	pushl	%ebp
+	pushl	%edi
+	movl	%eax, %edi
+	pushl	%esi
+	pushl	%ebx
+	leal	8(%eax), %eax
+	subl	$44, %esp
+	movl	%edx, 12(%esp)
+	movl	%eax, %edx
+	shrl	$3, %edx
+	movzbl	536870912(%edx), %edx
+	testb	%dl, %dl
+	je	.L1634
+	movl	%eax, %ecx
+	andl	$7, %ecx
+	addl	$3, %ecx
+	cmpb	%dl, %cl
+	jge	.L1977
+.L1634:
+	movl	8(%edi), %ebx
+	leal	144(%ebx), %esi
+	movl	%esi, %eax
+	shrl	$3, %eax
+	movzbl	536870912(%eax), %eax
+	testb	%al, %al
+	je	.L1635
+	movl	%esi, %edx
+	andl	$7, %edx
+	addl	$3, %edx
+	cmpb	%al, %dl
+	jge	.L1978
+.L1635:
+	leal	140(%ebx), %ebp
+	movl	144(%ebx), %edx
+	movl	%ebp, %eax
+	shrl	$3, %eax
+	movzbl	536870912(%eax), %eax
+	testb	%al, %al
+	je	.L1636
+	movl	%ebp, %ecx
+	andl	$7, %ecx
+	addl	$3, %ecx
+	cmpb	%al, %cl
+	jge	.L1979
+.L1636:
+	movl	140(%ebx), %eax
+	cmpl	%eax, %edx
+	jb	.L1980
+	cmpl	$5000, %eax
+	jbe	.L1638
+	movl	$httpd_err400form, %eax
+	movl	%eax, %edx
+	shrl	$3, %edx
+	movzbl	536870912(%edx), %edx
+	testb	%dl, %dl
+	je	.L1639
+	andl	$7, %eax
+	addl	$3, %eax
+	cmpb	%dl, %al
+	jge	.L1981
+.L1639:
+	movl	$httpd_err400title, %eax
+	movl	httpd_err400form, %ecx
+	movl	%eax, %edx
+	shrl	$3, %edx
+	movzbl	536870912(%edx), %edx
+	testb	%dl, %dl
+	je	.L1659
+	andl	$7, %eax
+	addl	$3, %eax
+	cmpb	%dl, %al
+	jge	.L1982
+.L1659:
+	subl	$8, %esp
+	pushl	$.LC63
+	pushl	%ecx
+	pushl	$.LC63
+	pushl	httpd_err400title
+	pushl	$400
+.L1976:
+	pushl	%ebx
+	call	httpd_send_err
+	movl	44(%esp), %edx
+	movl	%edi, %eax
+	addl	$76, %esp
+.L1974:
+	popl	%ebx
+	popl	%esi
+	popl	%edi
+	popl	%ebp
+	jmp	finish_connection
+.L1638:
+	subl	$4, %esp
+	addl	$1000, %eax
+	pushl	%eax
+	leal	136(%ebx), %eax
+	pushl	%ebp
+	movl	%eax, 28(%esp)
+	pushl	%eax
+	call	httpd_realloc_str
+	movl	%ebp, %eax
+	addl	$16, %esp
+	shrl	$3, %eax
+	movzbl	536870912(%eax), %eax
+	testb	%al, %al
+	je	.L1641
+	movl	%ebp, %edx
+	andl	$7, %edx
+	addl	$3, %edx
+	cmpb	%al, %dl
+	jge	.L1983
+.L1641:
+	movl	%esi, %edx
+	movl	140(%ebx), %eax
+	shrl	$3, %edx
+	movzbl	536870912(%edx), %edx
+	testb	%dl, %dl
+	je	.L1642
+	movl	%esi, %ecx
+	andl	$7, %ecx
+	addl	$3, %ecx
+	cmpb	%dl, %cl
+	jge	.L1984
+.L1642:
+	movl	144(%ebx), %edx
+.L1637:
+	movl	16(%esp), %ebp
+	subl	%edx, %eax
+	movl	%eax, 20(%esp)
+	movl	%ebp, %ecx
+	shrl	$3, %ecx
+	movzbl	536870912(%ecx), %ecx
+	testb	%cl, %cl
+	je	.L1643
+	andl	$7, %ebp
+	addl	$3, %ebp
+	movl	%ebp, %eax
+	cmpb	%cl, %al
+	jge	.L1985
+.L1643:
+	leal	448(%ebx), %ebp
+	addl	136(%ebx), %edx
+	movl	%ebp, %ecx
+	shrl	$3, %ecx
+	movzbl	536870912(%ecx), %ecx
+	testb	%cl, %cl
+	je	.L1644
+	movl	%ebp, %eax
+	andl	$7, %eax
+	addl	$3, %eax
+	cmpb	%cl, %al
+	jge	.L1986
+.L1644:
+	subl	$4, %esp
+	pushl	24(%esp)
+	pushl	%edx
+	pushl	448(%ebx)
+	call	read
+	addl	$16, %esp
+	.cfi_def_cfa_offset 64
+	testl	%eax, %eax
+	je	.L1987
+	js	.L1988
+	movl	%esi, %edx
+	shrl	$3, %edx
+	movzbl	536870912(%edx), %edx
+	testb	%dl, %dl
+	je	.L1653
+	movl	%esi, %ecx
+	andl	$7, %ecx
+	addl	$3, %ecx
+	cmpb	%dl, %cl
+	jge	.L1989
+.L1653:
+	movl	12(%esp), %edx
+	addl	%eax, 144(%ebx)
+	movl	%edx, %eax
+	shrl	$3, %eax
+	movzbl	536870912(%eax), %eax
+	testb	%al, %al
+	je	.L1654
+	andl	$7, %edx
+	addl	$3, %edx
+	cmpb	%al, %dl
+	jge	.L1990
+.L1654:
+	movl	12(%esp), %eax
+	movl	(%eax), %eax
+	movl	%eax, 16(%esp)
+	leal	68(%edi), %eax
+	movl	%eax, %edx
+	shrl	$3, %edx
+	movzbl	536870912(%edx), %edx
+	testb	%dl, %dl
+	je	.L1655
+	movl	%eax, %esi
+	andl	$7, %esi
+	addl	$3, %esi
+	movl	%esi, %ecx
+	cmpb	%dl, %cl
+	jge	.L1991
+.L1655:
+	movl	16(%esp), %eax
+	subl	$12, %esp
+	movl	%eax, 68(%edi)
+	pushl	%ebx
+	call	httpd_got_request
+	addl	$16, %esp
+	testl	%eax, %eax
+	je	.L1633
+	cmpl	$2, %eax
+	jne	.L1972
+	movl	$httpd_err400form, %eax
+	movl	%eax, %edx
+	shrl	$3, %edx
+	movzbl	536870912(%edx), %edx
+	testb	%dl, %dl
+	je	.L1658
+	andl	$7, %eax
+	addl	$3, %eax
+	cmpb	%dl, %al
+	jl	.L1658
+	subl	$12, %esp
+	pushl	$httpd_err400form
+	call	__asan_report_load4
+.L2010:
+	.cfi_restore_state
+	movl	%edi, %eax
+	shrl	$3, %eax
+	movzbl	536870912(%eax), %eax
+	testb	%al, %al
+	je	.L1690
+	movl	%edi, %edx
+	andl	$7, %edx
+	addl	$3, %edx
+	cmpb	%al, %dl
+	jge	.L1992
+.L1690:
+	movl	12(%esp), %edx
+	movl	$2, (%edi)
+	movl	%edx, %eax
+	shrl	$3, %eax
+	movzbl	536870912(%eax), %eax
+	testb	%al, %al
+	je	.L1691
+	andl	$7, %edx
+	addl	$3, %edx
+	cmpb	%al, %dl
+	jge	.L1993
+.L1691:
+	movl	12(%esp), %eax
+	movl	(%eax), %eax
+	movl	%eax, 12(%esp)
+	leal	64(%edi), %eax
+	movl	%eax, %edx
+	shrl	$3, %edx
+	movzbl	536870912(%edx), %edx
+	testb	%dl, %dl
+	je	.L1692
+	movl	%eax, %esi
+	andl	$7, %esi
+	addl	$3, %esi
+	movl	%esi, %ecx
+	cmpb	%dl, %cl
+	jge	.L1994
+.L1692:
+	movl	12(%esp), %eax
+	movl	%eax, 64(%edi)
+	leal	80(%edi), %eax
+	movl	%eax, %edx
+	shrl	$3, %edx
+	movzbl	536870912(%edx), %edx
+	testb	%dl, %dl
+	je	.L1693
+	movl	%eax, %ecx
+	andl	$7, %ecx
+	addl	$3, %ecx
+	cmpb	%dl, %cl
+	jge	.L1995
+.L1693:
+	movl	%ebp, %eax
+	movl	$0, 80(%edi)
+	shrl	$3, %eax
+	movzbl	536870912(%eax), %eax
+	testb	%al, %al
+	je	.L1694
+	movl	%ebp, %edx
+	andl	$7, %edx
+	addl	$3, %edx
+	cmpb	%al, %dl
+	jge	.L1996
+.L1694:
+	subl	$12, %esp
+	pushl	448(%ebx)
+	call	fdwatch_del_fd
+	movl	%ebp, %eax
+	addl	$16, %esp
+	shrl	$3, %eax
+	movzbl	536870912(%eax), %eax
+	testb	%al, %al
+	je	.L1695
+	movl	%ebp, %edx
+	andl	$7, %edx
+	addl	$3, %edx
+	cmpb	%al, %dl
+	jge	.L1997
+.L1695:
+	subl	$4, %esp
+	pushl	$1
+	pushl	%edi
+	pushl	448(%ebx)
+	call	fdwatch_add_fd
+	addl	$16, %esp
+.L1633:
+	addl	$44, %esp
+	popl	%ebx
+	popl	%esi
+	popl	%edi
+	popl	%ebp
+	ret

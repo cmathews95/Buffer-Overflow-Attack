@@ -1,0 +1,130 @@
+	bla.no	
+handle_read:
+.LFB18:
+	pushl	%ebp
+	pushl	%edi
+	movl	%edx, %edi
+	pushl	%esi
+	pushl	%ebx
+	movl	%eax, %esi
+	subl	$12, %esp
+	movl	8(%eax), %ebx
+	movl	144(%ebx), %eax
+	movl	140(%ebx), %ecx
+	cmpl	%ecx, %eax
+	jb	.L396
+	cmpl	$5000, %ecx
+	jbe	.L424
+.L423:
+	subl	$8, %esp
+	pushl	$.LC60
+	pushl	httpd_err400form
+	pushl	$.LC60
+	pushl	httpd_err400title
+	pushl	$400
+.L422:
+	pushl	%ebx
+	call	httpd_send_err
+	movl	%edi, %edx
+	movl	%esi, %eax
+	addl	$44, %esp
+.L419:
+	popl	%ebx
+	popl	%esi
+	popl	%edi
+	popl	%ebp
+	jmp	finish_connection
+.L424:
+	leal	140(%ebx), %eax
+	subl	$4, %esp
+	addl	$1000, %ecx
+	pushl	%ecx
+	pushl	%eax
+	leal	136(%ebx), %eax
+	pushl	%eax
+	call	httpd_realloc_str
+	movl	140(%ebx), %ecx
+	movl	144(%ebx), %eax
+	addl	$16, %esp
+.L396:
+	subl	$4, %esp
+	subl	%eax, %ecx
+	pushl	%ecx
+	addl	136(%ebx), %eax
+	pushl	%eax
+	pushl	448(%ebx)
+	call	read
+	addl	$16, %esp
+	testl	%eax, %eax
+	je	.L423
+	js	.L425
+	addl	%eax, 144(%ebx)
+	movl	(%edi), %eax
+	subl	$12, %esp
+	pushl	%ebx
+	movl	%eax, 68(%esi)
+	call	httpd_got_request
+	addl	$16, %esp
+	testl	%eax, %eax
+	je	.L395
+	cmpl	$2, %eax
+	je	.L423
+	subl	$12, %esp
+	pushl	%ebx
+	call	httpd_parse_request
+	addl	$16, %esp
+	testl	%eax, %eax
+	js	.L420
+	movl	%esi, %eax
+	call	check_throttles
+	testl	%eax, %eax
+	je	.L426
+	subl	$8, %esp
+	pushl	%edi
+	pushl	%ebx
+	call	httpd_start_request
+	addl	$16, %esp
+	testl	%eax, %eax
+	js	.L420
+	movl	336(%ebx), %edx
+	testl	%edx, %edx
+	je	.L406
+	movl	344(%ebx), %eax
+	movl	%eax, 92(%esi)
+	movl	348(%ebx), %eax
+	addl	$1, %eax
+	movl	%eax, 88(%esi)
+.L407:
+	movl	452(%ebx), %eax
+	testl	%eax, %eax
+	je	.L427
+	movl	88(%esi), %eax
+	cmpl	%eax, 92(%esi)
+	jl	.L428
+.L420:
+	movl	%edi, %edx
+	movl	%esi, %eax
+	addl	$12, %esp
+	jmp	.L419
+.L428:
+	movl	(%edi), %eax
+	subl	$12, %esp
+	pushl	448(%ebx)
+	movl	$2, (%esi)
+	movl	$0, 80(%esi)
+	movl	%eax, 64(%esi)
+	call	fdwatch_del_fd
+	addl	$12, %esp
+	pushl	$1
+	pushl	%esi
+	pushl	448(%ebx)
+	call	fdwatch_add_fd
+	addl	$16, %esp
+
+.L395:
+	addl	$12, %esp
+	popl	%ebx
+	popl	%esi
+	popl	%edi
+	popl	%ebp
+	ret
